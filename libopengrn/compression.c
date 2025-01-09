@@ -44,21 +44,21 @@ bool Compression_UnOodle1(uint8_t* compressedData,
                           uint32_t oodleStop2,
                           bool endianessMismatch,
                           bool isOodle0) {
-    if(compressedLength == 0) {
-        return true;
-    }
-
     TParameter parameters[3];
 
-    memset(parameters, 0, sizeof(parameters));
-    memcpy(parameters, compressedData, sizeof(parameters));
+    if(compressedLength < sizeof(parameters)) {
+        return true;
+    }
 
     if (endianessMismatch) {
         if (isOodle0)
             Platform_Swap1(compressedData, compressedLength);
         else
-            Platform_Swap1((uint8_t*)parameters, sizeof(parameters));
+            Platform_Swap1(compressedData, sizeof(parameters));
     }
+
+    memset(parameters, 0, sizeof(parameters));
+    memcpy(parameters, compressedData, sizeof(parameters));
 
     TDecoder decoder;
     Decoder_Init(&decoder, compressedData + sizeof(parameters));
