@@ -37,7 +37,7 @@ else()
         set(LIB_VARIANT STATIC)
 endif()
 
-add_library(opengrn STATIC ${SOURCE_FILES} ${HEADER_FILES})
+add_library(opengrn ${LIB_VARIANT} ${SOURCE_FILES} ${HEADER_FILES})
 
 target_include_directories(opengrn PUBLIC .)
 
