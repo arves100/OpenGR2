@@ -42,6 +42,7 @@ extern int Compression_GetExtraLen(uint32_t nType);
 	@param oodleStop1 first stop byte of oodle
 	@param oodleStop2 second stop byte of oodle
 	@param endianessMismatch if the file has a different endianess
+	@param isOodle0 if the compression codec is the older oodle compression variant
 	@return true if the decompression succeeded, otherwise false
 */
 extern bool Compression_UnOodle1(uint8_t* compressedData,
@@ -50,4 +51,5 @@ extern bool Compression_UnOodle1(uint8_t* compressedData,
                                            uint32_t decompressedLength,
                                            uint32_t oodleStop1,
                                            uint32_t oodleStop2,
-	                                       bool endianessMismatch);
+                                           bool endianessMismatch,
+                                           bool isOodle0);

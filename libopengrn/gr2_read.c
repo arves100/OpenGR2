@@ -276,14 +276,9 @@ OG_DLLAPI bool Gr2_Load(const uint8_t* data, size_t len, TGr2* gr2)
 
 			switch (sector.compressType)
 			{
-#if 0
-			case COMPRESSION_TYPE_OODLE0:
-				success = Compression_UnOodle0(pCompData, sct.compressedLen, pDecompData, cnt.info.decompressLen);
-				break;
-#endif
 			case COMPRESSION_TYPE_OODLE0:
 			case COMPRESSION_TYPE_OODLE1:
-				success = Compression_UnOodle1(pComp, sector.compressedLen, pDecomp, sector.decompressLen, sector.oodleStop0, sector.oodleStop1, gr2->mismatchEndianness);
+				success = Compression_UnOodle1(pComp, sector.compressedLen, pDecomp, sector.decompressLen, sector.oodleStop0, sector.oodleStop1, gr2->mismatchEndianness, sector.compressType == COMPRESSION_TYPE_OODLE0);
 				break;
 #if 0
 			case COMPRESSION_TYPE_BITKNIT1:
@@ -339,7 +334,7 @@ OG_DLLAPI bool Gr2_Load(const uint8_t* data, size_t len, TGr2* gr2)
 
 		for (k = 0; k < sector.marshallSize; k++)
 		{
-			pos = sector.marshallOffset + (k * sizeof(TFixUpData));
+			pos = sector.marshallOffset + (k * sizeof(TMarshallData));
 
 			if (pos > len)
 			{

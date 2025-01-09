@@ -33,6 +33,7 @@ int Compression_GetExtraLen(uint32_t nType)
     @param decompressedLength length of the decompressed data
     @param oodleStop1 first stop byte of oodle
     @param oodleStop2 second stop byte of oodle
+    @param isOodle0 if the compression codec is the older oodle compression variant
     @return true if the decompression succeeded, otherwise false
 */
 bool Compression_UnOodle1(uint8_t* compressedData,
@@ -41,7 +42,8 @@ bool Compression_UnOodle1(uint8_t* compressedData,
                           uint32_t decompressedLength,
                           uint32_t oodleStop1,
                           uint32_t oodleStop2,
-                          bool endianessMismatch) {
+                          bool endianessMismatch,
+                          bool isOodle0) {
     if(compressedLength == 0) {
         return true;
     }
@@ -51,8 +53,12 @@ bool Compression_UnOodle1(uint8_t* compressedData,
     memset(parameters, 0, sizeof(parameters));
     memcpy(parameters, compressedData, sizeof(parameters));
 
-    if (endianessMismatch)
-        Platform_Swap1((uint8_t*)parameters, sizeof(parameters));
+    if (endianessMismatch) {
+        if (isOodle0)
+            Platform_Swap1(compressedData, compressedLength);
+        else
+            Platform_Swap1((uint8_t*)parameters, sizeof(parameters));
+    }
 
     TDecoder decoder;
     Decoder_Init(&decoder, compressedData + sizeof(parameters));
